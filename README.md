@@ -5,9 +5,9 @@
 <h1 align="center">BAKI</h1>
 
 <p align="center">
-  <b>Asistente personal de IA para Windows, por voz y por texto, que no solo responde: actúa.</b><br>
-  Gestiona archivos, correo, agenda y CRM, crea automatizaciones en n8n y programa proyectos,<br>
-  siempre bajo un sistema de permisos que pide tu aprobación antes de cualquier acción con consecuencias.
+  <b>Personal AI assistant for Windows, by voice and text, that does not just answer: it acts.</b><br>
+  Manages files, email, calendar and CRM, builds n8n automations and writes software projects,<br>
+  always under a permission system that asks for your approval before any action with consequences.
 </p>
 
 <p align="center">
@@ -21,150 +21,150 @@
 
 ---
 
-## Qué es
+## What it is
 
-BAKI es un agente de IA de escritorio inspirado en la idea de «JARVIS», diseñado con la seguridad en el centro. Su cerebro es el **Claude Agent SDK** (Claude Code ejecutándose sin interfaz). Funciona con una suscripción de Claude, **sin API key**.
+BAKI is a desktop AI agent inspired by the idea of "JARVIS", designed with security at its core. Its brain is the **Claude Agent SDK** (Claude Code running headless). It works with a Claude subscription, **no API key needed**.
 
-Le hablas («Baki, ¿qué tengo hoy en la agenda?») o le escribes. Encadena herramientas reales para cumplir la orden: busca en internet, lee tus correos, crea un flujo en n8n, escribe código y lo prueba… Cuando una acción envía, publica, borra o ejecuta algo, se detiene y te muestra **exactamente** qué va a hacer antes de seguir.
+You talk to it ("Baki, what's on my calendar today?") or type to it. It chains real tools to carry out the order: it searches the internet, reads your email, builds an n8n workflow, writes code and tests it… When an action sends, publishes, deletes or runs something, it stops and shows you **exactly** what it is about to do before continuing.
 
-## Funcionalidades
+## Features
 
-| Área | Qué hace |
+| Area | What it does |
 |---|---|
-| 🗣️ **Voz** | Manos libres con palabra de activación («Baki, …»), interrupción por voz, filtro anti-eco, aprobación hablada («sí», «sí a todo», «no»). Solo responde en voz alta si la orden fue por voz. Voz del navegador, ElevenLabs o un servidor TTS local. |
-| 📁 **Archivos y sistema** | Leer (texto, código, Word, PDF), buscar, crear, editar con copia de seguridad, mover, enviar a la papelera, abrir apps y webs, PowerShell, portapapeles. |
-| 🌐 **Web** | Búsqueda web y extracción de datos de páginas (emails, teléfonos, enlaces) con protección SSRF. |
-| ✉️ **Google Workspace** | Gmail (buscar, leer, borradores, enviar, papelera) y Google Calendar (ver, crear, modificar, borrar) mediante OAuth propio. |
-| 📇 **CRM GoHighLevel** | Contactos, oportunidades, conversaciones (SMS, email, Instagram, WhatsApp), publicación en redes sociales y acceso a la API completa. |
-| ⚙️ **n8n** | Diseña, crea, prueba (por webhook), depura y activa automatizaciones y agentes de IA en n8n. |
-| 👨‍💻 **Programador** | Un subagente de Claude Code encerrado en una carpeta de proyecto: escribe código y tests, ejecuta comandos con aprobación y revisa su propio trabajo. |
-| 🧠 **Memoria** | Memoria a largo plazo en una bóveda de Obsidian. Las conversaciones se reanudan tras reiniciar y se pueden abrir y renombrar. |
-| ⏰ **Rutinas** | Tareas programadas (por ejemplo, un resumen diario de correo y agenda) en modo de solo lectura, con un informe al terminar. |
-| 🧩 **Skills** | 13 skills de flujo de trabajo: proyecto nuevo, refinar ideas, interrogatorio de planes (*grill me*), especificación, planificación, TDD, seguridad, depuración, agentes para empresas, n8n… |
+| 🗣️ **Voice** | Hands-free with a wake word ("Baki, …"), voice interruption, echo filter, spoken approval ("yes", "yes to all", "no"). Only answers out loud if the request was spoken. Browser voice, ElevenLabs or a local TTS server. |
+| 📁 **Files & system** | Read (text, code, Word, PDF), search, create, edit with backup, move, send to the recycle bin, open apps and websites, PowerShell, clipboard. |
+| 🌐 **Web** | Web search and data extraction from pages (emails, phone numbers, links) with SSRF protection. |
+| ✉️ **Google Workspace** | Gmail (search, read, drafts, send, trash) and Google Calendar (view, create, edit, delete) through your own OAuth. |
+| 📇 **GoHighLevel CRM** | Contacts, opportunities, conversations (SMS, email, Instagram, WhatsApp), social media posting and full API access. |
+| ⚙️ **n8n** | Designs, creates, tests (via webhook), debugs and activates automations and AI agents in n8n. |
+| 👨‍💻 **Programmer** | A Claude Code subagent confined to one project folder: writes code and tests, runs commands with approval and reviews its own work. |
+| 🧠 **Memory** | Long-term memory in an Obsidian vault. Conversations resume after a restart and can be opened and renamed. |
+| ⏰ **Routines** | Scheduled tasks (for example, a daily email and calendar digest) in read-only mode, with a report when finished. |
+| 🧩 **Skills** | 13 workflow skills: new project, idea refinement, plan interrogation (grill me), specification, planning, TDD, security, debugging, business agents, n8n… |
 
-## Interfaz «Command Center»
+### "Command Center" interface
 
-- **Centro:** chat con streaming, Markdown seguro y selector de modelo.
-- **Izquierda:** menú con Dashboard, Conversaciones, Tareas, Skills y Conectores.
-- **Derecha:** uso de Claude (contexto de la conversación, límite del plan, consumo del día) y tareas de la conversación con su estado (en curso, hecha, error).
-- **Abajo:** botón «Hablar con BAKI» y modo manos libres.
-- **Aprobaciones:** tarjetas con los argumentos exactos y botones de aprobar o rechazar.
+- **Center:** streaming chat, safe Markdown and a model selector.
+- **Left:** menu with Dashboard, Conversations, Tasks, Skills and Connectors.
+- **Right:** Claude usage (conversation context, plan limit, daily consumption) and the conversation's tasks with their status (in progress, done, error).
+- **Bottom:** "Talk to BAKI" button and hands-free mode.
+- **Approvals:** cards with the exact arguments and approve / reject buttons.
 
-## Arquitectura
+## Architecture
 
 ```mermaid
 flowchart LR
-    subgraph Navegador["Edge (127.0.0.1:8001)"]
+    subgraph Browser["Edge (127.0.0.1:8001)"]
         UI["React · Command Center"]
-        STT["Reconocimiento de voz"]
-        TTS["Síntesis de voz"]
+        STT["Speech recognition"]
+        TTS["Speech synthesis"]
     end
 
     subgraph Backend["FastAPI (local)"]
         WS["WebSocket /ws"]
-        AG["Agente<br/>ClaudeSDKClient"]
-        POL{{"Política de permisos<br/>hook PreToolUse + can_use_tool"}}
-        APR["Cola de aprobaciones<br/>huella SHA-256 + auditoría"]
-        MCP["Servidor MCP en proceso<br/>52 herramientas"]
-        SUB["Subagente programador<br/>(una carpeta)"]
-        SCH["Planificador de rutinas"]
+        AG["Agent<br/>ClaudeSDKClient"]
+        POL{{"Permission policy<br/>PreToolUse hook + can_use_tool"}}
+        APR["Approval queue<br/>SHA-256 fingerprint + audit"]
+        MCP["In-process MCP server<br/>52 tools"]
+        SUB["Programmer subagent<br/>(one folder)"]
+        SCH["Routine scheduler"]
     end
 
-    subgraph Externos["Integraciones"]
+    subgraph External["Integrations"]
         G["Gmail / Calendar"]
         GHL["GoHighLevel"]
-        N8N["n8n (Docker local)"]
+        N8N["n8n (local Docker)"]
         WEB["Web"]
     end
 
-    KR[("Administrador de<br/>credenciales de Windows")]
+    KR[("Windows<br/>Credential Manager")]
 
     UI <--> WS --> AG --> POL
-    POL -- "nivel 1" --> MCP
-    POL -- "nivel 2" --> APR -- "aprobado" --> MCP
+    POL -- "level 1" --> MCP
+    POL -- "level 2" --> APR -- "approved" --> MCP
     APR <--> UI
     MCP --> SUB
     MCP --> G & GHL & N8N & WEB
-    MCP -. "solo la capa de integraciones" .-> KR
+    MCP -. "integrations layer only" .-> KR
     SCH --> AG
 ```
 
-## Modelo de seguridad
+## Security model
 
-La seguridad es la decisión de diseño central, no un añadido:
+Security is the central design decision, not an add-on:
 
-- **Dos niveles y denegación por defecto.**
-  - Nivel 1 (consultar, leer dentro de carpetas de confianza) se ejecuta sin preguntar.
-  - Nivel 2 (enviar, publicar, borrar, sobrescribir, ejecutar) espera tu aprobación.
-  - Cualquier herramienta fuera de la política se deniega.
-- **Dos barreras independientes.** Un hook `PreToolUse`, que se ejecuta siempre, y `can_use_tool` vuelven a evaluar la política. La aprobación queda ligada a los argumentos exactos mediante una huella SHA-256, es de un solo uso, caduca y queda auditada.
-- **Aislamiento del agente.** Arranca con `setting_sources=[]`: no carga ningún `settings.json`, `CLAUDE.md` ni hook del disco. Las herramientas integradas de Claude Code están desactivadas (salvo búsqueda web), y las skills llegan como plugin local protegido.
-- **Zonas protegidas.** El agente no puede modificar su propio código, su configuración, sus skills, `~/.ssh`, `~/.claude`, las credenciales de Windows ni `C:\Windows`. Tampoco puede ampliarse sus propios permisos.
-- **Secretos fuera del alcance del modelo.** Se guardan en el Administrador de credenciales de Windows (`keyring`), se introducen solo por consola con entrada oculta y nunca aparecen en prompts, logs ni auditoría. Un test comprueba que solo la capa de integraciones puede leerlos.
-- **Inyección de prompt.** El contenido de correos, webs y archivos se trata como datos, no como órdenes.
-- **Red local.**
-  - El backend escucha solo en `127.0.0.1` y valida `Host` y `Origin`, lo que lo protege del DNS rebinding.
-  - La lectura de webs bloquea direcciones privadas, la red local y los metadatos de la nube.
-- **Subagente programador.**
-  - Lee y escribe solo dentro de su carpeta.
-  - Cada comando pide aprobación.
-  - No carga la configuración `.claude` del repositorio en el que trabaja.
-- **Rutinas.** Funcionan en modo de solo lectura. Lo que requeriría aprobación queda anotado en el informe en lugar de ejecutarse.
+- **Two levels and deny by default.**
+  - Level 1 (query, read inside trusted folders) runs without asking.
+  - Level 2 (send, publish, delete, overwrite, execute) waits for your approval.
+  - Any tool outside the policy is denied.
+- **Two independent barriers.** A `PreToolUse` hook, which always runs, and `can_use_tool` evaluate the policy again. Approval is bound to the exact arguments through a SHA-256 fingerprint, is single-use, expires and is audited.
+- **Agent isolation.** It starts with `setting_sources=[]`: it loads no `settings.json`, `CLAUDE.md` or hook from disk. Claude Code's built-in tools are disabled (except web search), and the skills arrive as a protected local plugin.
+- **Protected zones.** The agent cannot modify its own code, its configuration, its skills, `~/.ssh`, `~/.claude`, Windows credentials or `C:\Windows`. It also cannot extend its own permissions.
+- **Secrets out of the model's reach.** They are stored in the Windows Credential Manager (keyring), entered only through the console with hidden input, and never appear in prompts, logs or the audit trail. A test checks that only the integrations layer can read them.
+- **Prompt injection.** The content of emails, websites and files is treated as data, not as orders.
+- **Local network.**
+  - The backend listens only on `127.0.0.1` and validates `Host` and `Origin`, which protects it from DNS rebinding.
+  - Web reading blocks private addresses, the local network and cloud metadata.
+- **Programmer subagent.**
+  - Reads and writes only inside its folder.
+  - Every command asks for approval.
+  - It does not load the `.claude` configuration of the repository it works on.
+- **Routines.** They run in read-only mode. Whatever would require approval is noted in the report instead of being executed.
 
 ## Stack
 
 - **Backend:** Python 3.11, FastAPI, Uvicorn, Claude Agent SDK, httpx, keyring, Google API Client, pypdf, Send2Trash.
-- **Frontend:** React 19, TypeScript, Vite y CSS propio, sin librerías de componentes.
-- **Voz:** Web Speech API, ElevenLabs (opcional) y servidor TTS local compatible con OpenAI (opcional).
-- **Automatización:** n8n en Docker.
-- **Memoria:** Obsidian (Markdown).
+- **Frontend:** React 19, TypeScript, Vite and custom CSS, no component libraries.
+- **Voice:** Web Speech API, ElevenLabs (optional) and a local OpenAI-compatible TTS server (optional).
+- **Automation:** n8n on Docker.
+- **Memory:** Obsidian (Markdown).
 
-## Estructura
+## Project structure
 
 ```
 BAKI/
 ├── backend/
 │   ├── app/
-│   │   ├── main.py                 # FastAPI: WebSocket, paneles, TTS, interfaz
-│   │   ├── agente/                 # sesión, política, aprobaciones, registro, rutas protegidas
-│   │   │   └── herramientas/       # archivos, sistema, web, memoria, google, ghl, n8n, rutinas, programador
-│   │   ├── integraciones/          # única capa con acceso a secretos
+│   │   ├── main.py              # FastAPI: WebSocket, panels, TTS, interface
+│   │   ├── agente/              # session, policy, approvals, logging, protected paths
+│   │   │   └── herramientas/    # files, system, web, memory, google, ghl, n8n, routines, programmer
+│   │   ├── integraciones/       # only layer with access to secrets
 │   │   └── secrets_store.py / secrets_cli.py
-│   ├── data/plugin_baki/skills/    # skills que BAKI usa en tiempo de ejecución
-│   └── tests/                      # 155 tests
-├── frontend/src/                   # useBaki.ts (lógica) + components/ (interfaz)
-├── n8n/docker-compose.yml          # n8n local, solo accesible desde 127.0.0.1
-├── docs/                           # diseño de secretos, estado y guía de conexiones
+│   ├── data/plugin_baki/skills/ # skills BAKI uses at runtime
+│   └── tests/                   # 155 tests
+├── frontend/src/                # useBaki.ts (logic) + components/ (interface)
+├── n8n/docker-compose.yml       # local n8n, reachable only from 127.0.0.1
+├── docs/                        # secrets design, status and connection guide (Spanish)
 ├── iniciar_baki.ps1 / apagar_baki.ps1
 └── GUIA_SKILLS.md
 ```
 
-## Puesta en marcha
+## Getting started
 
-**Requisitos:** Windows 10/11, Python 3.11+, Node.js 24+, [Claude Code](https://docs.claude.com/en/docs/claude-code) instalado y con sesión iniciada, y Microsoft Edge (recomendado por sus voces naturales en español). Para n8n, Docker Desktop.
+**Requirements:** Windows 10/11, Python 3.11+, Node.js 24+, [Claude Code](https://docs.claude.com/en/docs/claude-code) installed and signed in, and Microsoft Edge (recommended for its natural-sounding Spanish voices). Docker Desktop for n8n.
 
 ```powershell
-git clone https://github.com/<tu-usuario>/BAKI.git
-cd BAKI
+git clone https://github.com/Javierpe10/Baki.git
+cd Baki
 python -m venv .venv
 .\.venv\Scripts\python.exe -m pip install -r backend\requirements.txt
 cd frontend; npm install; npm run build; cd ..
 powershell -ExecutionPolicy Bypass -File .\iniciar_baki.ps1
 ```
 
-`iniciar_baki.ps1` arranca el backend oculto, enciende Docker (n8n) si hace falta y abre BAKI en una ventana de Edge.
+`iniciar_baki.ps1` starts the backend hidden, turns on Docker (n8n) if needed and opens BAKI in an Edge window.
 
-**Integraciones (opcionales).** Se conectan por consola y las claves van al Administrador de credenciales de Windows:
+**Integrations (optional).** They are connected from the console and the keys go to the Windows Credential Manager:
 
 ```powershell
 cd backend
-..\.venv\Scripts\python.exe -m app.secrets_cli autorizar-google "ruta\client_secret.json"
+..\.venv\Scripts\python.exe -m app.secrets_cli autorizar-google "path\to\client_secret.json"
 ..\.venv\Scripts\python.exe -m app.secrets_cli conectar-ghl
 ..\.venv\Scripts\python.exe -m app.secrets_cli conectar-n8n
 ..\.venv\Scripts\python.exe -m app.secrets_cli conectar-elevenlabs
 ```
 
-La guía detallada está en [`docs/GUIA_CONEXIONES.md`](docs/GUIA_CONEXIONES.md).
+The detailed guide is in [docs/GUIA_CONEXIONES.md](docs/GUIA_CONEXIONES.md) (in Spanish).
 
 **n8n:**
 
@@ -179,25 +179,25 @@ cd backend
 ..\.venv\Scripts\python.exe -m pytest tests -q
 ```
 
-Cubren la política de permisos (cada herramienta y nivel), las aprobaciones (un solo uso, caducidad, aprobación por grupo), las rutas protegidas y el escape con `..`, la protección SSRF, el aislamiento de secretos, el subagente programador, la validación de flujos n8n, las rutinas, los endpoints y la validación de `Host` y `Origin`.
+They cover the permission policy (every tool and level), approvals (single use, expiry, group approval), protected paths and the `..` escape, SSRF protection, secrets isolation, the programmer subagent, n8n flow validation, routines, the endpoints and `Host` / `Origin` validation.
 
-## Skills de terceros
+## Third-party skills
 
-Incluidas con su licencia MIT en cada carpeta:
+Included with their MIT license in each folder:
 
-- [mattpocock/skills](https://github.com/mattpocock/skills): `tdd`, `grill-me`, `grilling`, `codebase-design`.
-- [vercel-labs/skills](https://github.com/vercel-labs/skills): `find-skills`.
-- [addyosmani/agent-skills](https://github.com/addyosmani/agent-skills): `idea-refine`, `spec-driven-development`, `planning-and-task-breakdown`, `security-and-hardening`, `debugging-and-error-recovery`.
+- [mattpocock/skills](https://github.com/mattpocock/skills): tdd, grill-me, grilling, codebase-design.
+- [vercel-labs/skills](https://github.com/vercel-labs/skills): find-skills.
+- [addyosmani/agent-skills](https://github.com/addyosmani/agent-skills): idea-refine, spec-driven-development, planning-and-task-breakdown, security-and-hardening, debugging-and-error-recovery.
 
-`proyecto-nuevo`, `n8n-automatizacion` y `agente-empresa` son skills propias de BAKI.
+`proyecto-nuevo`, `n8n-automatizacion` and `agente-empresa` are BAKI's own skills.
 
-## Limitaciones conocidas
+## Known limitations
 
-- Solo para Windows: usa el Administrador de credenciales, PowerShell y la ruta de Edge.
-- El reconocimiento de voz depende del navegador (Edge o Chrome) y necesita conexión.
-- El límite de uso del plan de Claude solo se muestra cuando Claude lo informa.
-- Diseñado para un único usuario en su propio equipo: no protege frente a procesos locales maliciosos.
+- Windows only: it uses the Credential Manager, PowerShell and the Edge path.
+- Speech recognition depends on the browser (Edge or Chrome) and needs an internet connection.
+- The Claude plan usage limit is only shown when Claude reports it.
+- Designed for a single user on their own machine: it does not protect against malicious local processes.
 
 ---
 
-<p align="center">Proyecto personal de <b>Javier</b> · construido con Claude Code</p>
+<p align="center">Personal project by <b>Javier</b> · built with Claude Code</p>
