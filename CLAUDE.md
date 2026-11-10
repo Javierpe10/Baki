@@ -37,6 +37,11 @@ Asistente personal de Javier, por voz y por texto, en Windows. También construy
 - Arrancar: icono «BAKI» del escritorio o `iniciar_baki.ps1` (backend oculto, logs en `backend/data/baki_*.log`, recompila la interfaz si cambió). Apagar: icono «Apagar BAKI» o `apagar_baki.ps1`. Tras cambiar el backend, apaga y vuelve a arrancar. No uses `--reload`: se cuelga.
 - Los `.ps1` se guardan en UTF-8 con BOM: PowerShell 5.1 rompe las tildes sin él.
 
+## Repositorio público
+- https://github.com/Javierpe10/Baki (público, sin licencia: todos los derechos reservados).
+- Antes de cada commit, revisa que no entre nada privado: `backend/data/` (salvo `plugin_baki`), `knowledge/`, `*.jsonl`, `*.log` y las notas internas están en `.gitignore`. No escribas rutas con el usuario de Windows, emails, claves ni nombres de clientes en archivos versionados.
+- Los commits usan el email anónimo de GitHub configurado en el repositorio, nunca el Gmail.
+
 ## Reglas
 - Niveles de permiso:
   - Nivel 1, sin preguntar: leer y consultar.
