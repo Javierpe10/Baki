@@ -1,0 +1,57 @@
+# ---------------------------------------------------------------
+# Datos privados: NUNCA se publican
+# ---------------------------------------------------------------
+# Configuración, sesión, auditoría, consumo, rutinas, copias y logs de BAKI
+backend/data/*
+# …excepto las skills (plugin local), que sí forman parte del proyecto
+!backend/data/plugin_baki/
+backend/data/plugin_baki/**/__pycache__/
+
+# Registros del flujo antiguo
+backend/app/permissions_audit.jsonl
+backend/app/usage_log.jsonl
+*.jsonl
+*.log
+
+# Memoria personal (bóveda de Obsidian con datos de clientes y empresa)
+knowledge/
+
+# Archivos compartidos con n8n
+n8n/archivos/*
+!n8n/archivos/.gitkeep
+
+# Notas internas de trabajo
+BAKI_resumen_para_cowork.md
+docs/BAKI_estado_2026-11-07.md
+
+# Secretos (por si acaso: BAKI los guarda en el Administrador de credenciales de Windows)
+.env
+.env.*
+*.pem
+*.key
+*.pfx
+*.p12
+client_secret*.json
+credentials*.json
+token*.json
+
+# Configuración local de herramientas
+.claude/settings.local.json
+
+# ---------------------------------------------------------------
+# Entornos y compilados
+# ---------------------------------------------------------------
+.venv/
+venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+node_modules/
+frontend/dist/
+*.tsbuildinfo
+.vite/
+
+# Sistema
+Thumbs.db
+desktop.ini
+.DS_Store
