@@ -17,7 +17,7 @@ Asistente personal de Javier, por voz y por texto, en Windows. También construy
 - `backend/app/integraciones/`: el único sitio que lee secretos (`google_auth`, `ghl_cliente`, `n8n_cliente`, `tts`). Un test lo vigila.
 - `backend/app/secrets_store.py` y `secrets_cli.py`: secretos en el Administrador de credenciales de Windows (`baki:<servicio>:<nombre>`).
 - `backend/data/`: configuración, sesión, auditoría, consumo y rutinas. Es zona protegida para el agente.
-  - `plugin_baki/skills/`: skills que usa BAKI mientras funciona.
+  - `plugin_baki/skills/`: skills que usa BAKI mientras funciona (24, incluidas las 11 `founder-*`, que corren por el programador con subagentes limitados por `max_subagentes_programador`).
 - `.claude/skills/`: skills para desarrollar BAKI con Claude Code (tdd, grill-me, grilling, codebase-design, find-skills).
 - `frontend/src/`: React + Vite, diseño «Command Center».
   - `useBaki.ts`: toda la lógica (WebSocket, voz, aprobaciones, conversaciones, tareas, uso).
@@ -32,7 +32,7 @@ Asistente personal de Javier, por voz y por texto, en Windows. También construy
 - `GUIA_SKILLS.md`: qué hace cada skill y cómo se activa. Actualízala al añadir o quitar skills.
 
 ## Comandos (PowerShell)
-- Tests: `cd backend; ..\.venv\Scripts\python.exe -m pytest tests -q` (esperado: 155 passed, 1 skipped)
+- Tests: `cd backend; ..\.venv\Scripts\python.exe -m pytest tests -q` (esperado: 157 passed, 1 skipped)
 - Interfaz: `cd frontend; npm run build; npx eslint src`
 - Arrancar: icono «BAKI» del escritorio o `iniciar_baki.ps1` (backend oculto, logs en `backend/data/baki_*.log`, recompila la interfaz si cambió). Apagar: icono «Apagar BAKI» o `apagar_baki.ps1`. Tras cambiar el backend, apaga y vuelve a arrancar. No uses `--reload`: se cuelga.
 - Los `.ps1` se guardan en UTF-8 con BOM: PowerShell 5.1 rompe las tildes sin él.

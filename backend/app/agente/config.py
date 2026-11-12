@@ -48,6 +48,8 @@ def _defaults() -> dict:
         "n8n_url": "",
         "carpeta_proyectos": str(HOME / "Desktop" / "Proyectos"),
         "max_turnos_programador": 80,
+        # Subagentes que el programador puede lanzar por tarea (panel de clientes, consejo…).
+        "max_subagentes_programador": 25,
     }
 
 

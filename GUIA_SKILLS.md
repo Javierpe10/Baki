@@ -1,12 +1,12 @@
 # Guía de skills de BAKI
 
-Actualizada: 8 de noviembre de 2026.
+Actualizada: 12 de noviembre de 2026.
 
 Hay dos grupos de skills, en sitios distintos:
 
 | Grupo | Dónde están | Quién las usa |
 |---|---|---|
-| **A. Skills de BAKI** (13) | `backend\data\plugin_baki\skills\` | BAKI, cuando le hablas o escribes en su interfaz |
+| **A. Skills de BAKI** (24: 13 generales + 11 founder) | `backend\data\plugin_baki\skills\` | BAKI, cuando le hablas o escribes en su interfaz |
 | **B. Skills de desarrollo** (5) | `.claude\skills\` | Claude Code, cuando trabajamos en el código de BAKI desde VS Code |
 
 **Cómo funciona la activación:**
@@ -143,6 +143,38 @@ Hay dos grupos de skills, en sitios distintos:
 
 ---
 
+## A2. Skills founder: validar un negocio antes de lanzarlo (Jake Schincariol)
+
+Once skills que ponen a prueba una idea de negocio antes de gastar dinero. Guardan todo en una carpeta `founder/` dentro de la carpeta del negocio (`Desktop\Proyectos\<negocio>\founder\`), y cada una lee lo que escribieron las anteriores.
+
+**Orden recomendado:** board → competitors → consumer → pricing → offer → cfo → marketing → brand → ops → launch → plan. Cada una también funciona sola.
+
+| Skill | Para qué | Ejemplo para pedírsela |
+|---|---|---|
+| founder-board | Un «consejo» de 3 miembros evalúa la idea con tres marcos publicados (oferta, monopolio, producto), puntúa, señala lo que la mataría y vota | «Pon a prueba mi idea de negocio: …» |
+| founder-competitors | Competidores directos, indirectos y sustitutos, con precios, posicionamiento y quejas de sus clientes, todo con enlace | «¿Quién es mi competencia para …?» |
+| founder-consumer | Panel de compradores simulados (20 en modo rápido) que reaccionan a tu oferta: quién compra, quién no y por qué | «Pasa mi idea por el panel de clientes, en modo rápido» |
+| founder-pricing | Rango de precio aceptable a partir del panel, frente a la competencia y tu margen | «¿Cuánto debería cobrar?» |
+| founder-offer | Construye una oferta irresistible (bonus, garantía, urgencia real) que responde a las objeciones | «Mejora mi oferta» |
+| founder-cfo | Números: margen real, punto de equilibrio, año 1 mes a mes, caja necesaria, recuperación de la inversión | «Haz los números de este negocio» |
+| founder-marketing | Posicionamiento, canales, campaña de lanzamiento de 30 días, ganchos y coste máximo por cliente | «Plan de marketing para …» |
+| founder-brand | Nombres (con las comprobaciones de marca, dominio y redes), voz, promesa y brief de identidad visual | «Ponle nombre y marca a …» |
+| founder-ops | Proveedores, personal, rutinas del día a día, herramientas, permisos y registro de riesgos | «¿Cómo funcionaría el día a día de …?» |
+| founder-launch | Test real barato primero, cuenta atrás con fechas, guion del día de lanzamiento y primeros 30 días | «Plan de lanzamiento para …» |
+| founder-plan | Une todo en un plan de negocio con un veredicto calculado: Rentable, Todavía no o Incompleto | «Hazme el plan de negocio» |
+
+**Cómo las ejecuta BAKI:**
+- Las que necesitan subagentes o scripts de Python (board, consumer, pricing, cfo, plan) van por el **programador**, dentro de la carpeta del negocio. Te pedirá aprobar la tarea y los comandos de Python; puedes aprobar todos los de esa tarea de una vez.
+- El resto (competitors, marketing, brand, ops, launch) las puede hacer BAKI directamente.
+- **Activación:** automática con las frases de la tabla, o di «usa la skill founder-…».
+
+**Ten en cuenta:**
+- El **panel de clientes** lanza un subagente por comprador y consume mucha cuota de tu plan. BAKI usa siempre el modo rápido (20 compradores). El programador tiene un límite de 25 subagentes por tarea (`max_subagentes_programador` en `backend\data\baki_config.json`). Para el panel completo de 100, súbelo a 105 y pídelo de forma explícita.
+- Son **compradores simulados**: sirven para descubrir objeciones y mensajes, no para predecir ventas. Confirma lo importante con clientes reales (`founder-launch` empieza justo por ahí).
+- No es asesoría financiera, legal ni fiscal.
+
+---
+
 ## B. Skills de desarrollo (Claude Code en VS Code)
 
 Solo existen cuando abres Claude Code en la carpeta `BAKI`. Aquí sí hay comandos con barra.
@@ -164,6 +196,7 @@ Claude Code trae además de serie `/code-review`, `/security-review` y `/simplif
 - **Idea de negocio nueva:** «Tengo una idea: … refínala y luego grill me». Usa idea-refine y después grilling.
 - **Proyecto con código para un cliente:** «Nuevo proyecto para la empresa X». Recorre proyecto-nuevo, especificación, plan, el programador con tdd, la revisión de seguridad y la entrega.
 - **Automatización rápida:** «En n8n, cuando pase X haz Y». Usa n8n-automatizacion y, si falla, debugging.
+- **Validar un negocio (propio o de un cliente):** «Pon a prueba esta idea: … y hazle el plan de negocio». Recorre el consejo, la competencia, el panel rápido, el precio, los números y el plan, con su veredicto.
 
 ## Procedencia
 
@@ -172,6 +205,7 @@ Claude Code trae además de serie `/code-review`, `/security-review` y `/simplif
 | tdd, grill-me, grilling, codebase-design | github.com/mattpocock/skills | MIT |
 | find-skills | github.com/vercel-labs/skills | MIT |
 | idea-refine, spec-driven-development, planning-and-task-breakdown, security-and-hardening, debugging-and-error-recovery | github.com/addyosmani/agent-skills | MIT |
+| founder-board, founder-competitors, founder-consumer, founder-pricing, founder-offer, founder-cfo, founder-marketing, founder-brand, founder-ops, founder-launch, founder-plan | github.com/jakeschincariol/founder-skill | MIT |
 | proyecto-nuevo, n8n-automatizacion, agente-empresa | Escritas para BAKI | Propias |
 
 El detalle de versiones está en `backend\data\plugin_baki\ORIGEN.md`. Antes de instalarse, se revisó el contenido de todas.

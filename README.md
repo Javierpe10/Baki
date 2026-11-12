@@ -15,7 +15,7 @@
   <img alt="FastAPI" src="https://img.shields.io/badge/FastAPI-0.162-009688?logo=fastapi&logoColor=white">
   <img alt="Claude Agent SDK" src="https://img.shields.io/badge/Claude_Agent_SDK-0.2-D97757">
   <img alt="React" src="https://img.shields.io/badge/React-19-61DAFB?logo=react&logoColor=black">
-  <img alt="Tests" src="https://img.shields.io/badge/tests-155_passing-3DDC97">
+  <img alt="Tests" src="https://img.shields.io/badge/tests-157_passing-3DDC97">
   <img alt="Windows" src="https://img.shields.io/badge/Windows-11-0078D4?logo=windows&logoColor=white">
 </p>
 
@@ -40,7 +40,7 @@ You talk to it ("Baki, what's on my calendar today?") or type to it. It chains r
 | 👨‍💻 **Programmer** | A Claude Code subagent confined to one project folder: writes code and tests, runs commands with approval and reviews its own work. |
 | 🧠 **Memory** | Long-term memory in an Obsidian vault. Conversations resume after a restart and can be opened and renamed. |
 | ⏰ **Routines** | Scheduled tasks (for example, a daily email and calendar digest) in read-only mode, with a report when finished. |
-| 🧩 **Skills** | 13 workflow skills: new project, idea refinement, plan interrogation (grill me), specification, planning, TDD, security, debugging, business agents, n8n… |
+| 🧩 **Skills** | 24 workflow skills: new project, idea refinement, plan interrogation (grill me), specification, planning, TDD, security, debugging, business agents, n8n, plus a business-validation pack (board, competitors, simulated customer panel, pricing, offer, numbers and business plan). |
 
 ### "Command Center" interface
 
@@ -131,7 +131,7 @@ BAKI/
 │   │   ├── integraciones/       # only layer with access to secrets
 │   │   └── secrets_store.py / secrets_cli.py
 │   ├── data/plugin_baki/skills/ # skills BAKI uses at runtime
-│   └── tests/                   # 155 tests
+│   └── tests/                   # 157 tests
 ├── frontend/src/                # useBaki.ts (logic) + components/ (interface)
 ├── n8n/docker-compose.yml       # local n8n, reachable only from 127.0.0.1
 ├── docs/                        # secrets design, status and connection guide (Spanish)
@@ -188,6 +188,7 @@ Included with their MIT license in each folder:
 - [mattpocock/skills](https://github.com/mattpocock/skills): tdd, grill-me, grilling, codebase-design.
 - [vercel-labs/skills](https://github.com/vercel-labs/skills): find-skills.
 - [addyosmani/agent-skills](https://github.com/addyosmani/agent-skills): idea-refine, spec-driven-development, planning-and-task-breakdown, security-and-hardening, debugging-and-error-recovery.
+- [jakeschincariol/founder-skill](https://github.com/jakeschincariol/founder-skill): the 11 founder-* skills (board, competitors, customer panel, pricing, offer, CFO, marketing, brand, operations, launch and plan).
 
 `proyecto-nuevo`, `n8n-automatizacion` and `agente-empresa` are BAKI's own skills.
 

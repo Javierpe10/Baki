@@ -6,6 +6,9 @@
 - Cada comando de terminal pide aprobación; puedes aprobar «todos los de esta tarea».
 - No carga configuración del proyecto (.claude/settings.json, hooks) del repositorio:
   un repositorio clonado no puede inyectarle permisos ni comandos.
+- Puede lanzar subagentes (herramienta Agent) hasta un límite por tarea
+  (max_subagentes_programador, 25 por defecto). Sus herramientas pasan por la
+  misma política: solo dentro de la carpeta y comandos con aprobación.
 """
 
 import uuid
@@ -20,6 +23,7 @@ LECTURA = {"Read", "Glob", "Grep", "NotebookRead"}
 ESCRITURA = {"Write", "Edit", "MultiEdit", "NotebookEdit"}
 LIBRES = {"WebSearch", "WebFetch", "Skill", "TodoWrite", "ToolSearch"}
 COMANDOS = {"Bash", "PowerShell"}
+SUBAGENTES = {"Agent", "Task"}
 
 PROMPT = """Eres el programador de BAKI. Trabajas solo dentro de la carpeta {carpeta}.
 Usa rutas dentro de esa carpeta. No intentes leer ni escribir fuera: se bloqueará.
@@ -30,7 +34,10 @@ autenticación, webhooks o llamadas a LLM, aplica baki:security-and-hardening an
 (léelo otra vez, ejecuta tests, linters o la app). Cada comando de terminal lo aprueba Javier: agrupa
 comandos y explica para qué sirve cada uno. Nunca guardes claves en el código: usa variables de entorno
 y un .env.example. Si algo no se puede hacer, dilo claramente.
-Al terminar, responde en español con: qué has construido, cómo arrancarlo, qué está probado y qué falta."""
+Al terminar, responde en español con: qué has construido, cómo arrancarlo, qué está probado y qué falta.
+Skills founder (baki:founder-*): trabajan en la subcarpeta founder/ de esta carpeta y usan Python con
+python3. Puedes lanzar como máximo {max_subagentes} subagentes (herramienta Agent) en esta tarea: para el
+panel de clientes usa siempre --quick (20 compradores) salvo que Javier pida más de forma explícita."""
 
 
 def carpeta_valida(ruta: str) -> Path:
@@ -48,11 +55,13 @@ def _ruta_de(nombre: str, entrada: dict) -> str | None:
     return entrada.get("path")
 
 
-def evaluar_programador(nombre: str, entrada: dict, carpeta: Path) -> str:
+def evaluar_programador(nombre: str, entrada: dict, carpeta: Path, subagentes_restantes: int = 0) -> str:
     if not isinstance(entrada, dict):
         return DENEGAR
     if nombre in LIBRES:
         return PERMITIR
+    if nombre in SUBAGENTES:
+        return PERMITIR if subagentes_restantes > 0 else DENEGAR
     if nombre in COMANDOS:
         return PREGUNTAR
     if nombre in LECTURA or nombre in ESCRITURA:
@@ -76,18 +85,35 @@ async def _ejecutar(carpeta: Path, instruccion: str, emitir, aprobaciones, grupo
     )
 
     archivos: set[str] = set()
+    config = cfg.cargar()
+    limite = max(0, int(config.get("max_subagentes_programador", 25)))
+    subagentes = {"usados": 0}
+
+    def restantes() -> int:
+        return limite - subagentes["usados"]
 
     async def hook(input_data, tool_use_id, ctx):
         nombre = input_data.get("tool_name", "")
         entrada = input_data.get("tool_input", {})
-        decision = evaluar_programador(nombre, entrada, carpeta)
+        decision = evaluar_programador(nombre, entrada, carpeta, restantes())
         salida = {"hookEventName": "PreToolUse", "permissionDecision": decision}
+        if nombre in SUBAGENTES:
+            if decision == PERMITIR:
+                subagentes["usados"] += 1  # el hook es el único que cuenta
+            else:
+                salida["permissionDecisionReason"] = (
+                    f"Límite de {limite} subagentes por tarea alcanzado. Termina con lo que tienes y díselo a Javier.")
+                return {"hookSpecificOutput": salida}
         if decision == DENEGAR:
             salida["permissionDecisionReason"] = f"Bloqueado: solo puedes trabajar dentro de {carpeta}."
         return {"hookSpecificOutput": salida}
 
     async def can_use(nombre, entrada, ctx):
-        decision = evaluar_programador(nombre, entrada, carpeta)
+        if nombre in SUBAGENTES:
+            # El hook ya lo contó; aquí solo se comprueba que no se ha superado el límite.
+            return PermissionResultAllow() if subagentes["usados"] <= limite else PermissionResultDeny(
+                message=f"Límite de {limite} subagentes por tarea alcanzado.")
+        decision = evaluar_programador(nombre, entrada, carpeta, restantes())
         if decision == PERMITIR:
             return PermissionResultAllow()
         if decision == DENEGAR:
@@ -97,15 +123,14 @@ async def _ejecutar(carpeta: Path, instruccion: str, emitir, aprobaciones, grupo
         )
         return PermissionResultAllow() if ok else PermissionResultDeny(message=motivo or "Rechazado por el usuario.")
 
-    config = cfg.cargar()
     opciones = ClaudeAgentOptions(
         model=config["modelo"],
         effort=config.get("esfuerzo") or None,
-        system_prompt=PROMPT.format(carpeta=carpeta),
+        system_prompt=PROMPT.format(carpeta=carpeta, max_subagentes=limite),
         setting_sources=[],
         plugins=[{"type": "local", "path": str(cfg.PLUGIN_DIR)}],
         strict_mcp_config=True,
-        tools=sorted(LECTURA | ESCRITURA | LIBRES | {"Bash"}),
+        tools=sorted(LECTURA | ESCRITURA | LIBRES | {"Bash"} | ({"Agent"} if limite else set())),
         hooks={"PreToolUse": [HookMatcher(matcher=None, hooks=[hook], timeout=30)]},
         can_use_tool=can_use,
         permission_mode="default",
@@ -130,7 +155,8 @@ async def _ejecutar(carpeta: Path, instruccion: str, emitir, aprobaciones, grupo
             elif isinstance(msg, ResultMessage):
                 informe, coste, error = msg.result or "", msg.total_cost_usd, msg.is_error
     return {"carpeta": str(carpeta), "terminado_con_error": error, "informe": informe,
-            "archivos_escritos": sorted(archivos)[:200], "coste_equivalente_usd": coste}
+            "archivos_escritos": sorted(archivos)[:200], "subagentes_usados": subagentes["usados"],
+            "coste_equivalente_usd": coste}
 
 
 @herramienta(

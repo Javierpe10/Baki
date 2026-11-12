@@ -15,6 +15,7 @@ ORIGEN = {
     "tdd": "Matt Pocock", "grill-me": "Matt Pocock", "grilling": "Matt Pocock", "codebase-design": "Matt Pocock",
     "find-skills": "Vercel",
 }
+ORIGEN_PREFIJOS = {"founder-": "Jake Schincariol"}
 WORKSPACE = cfg.DATA_DIR / "workspace"
 CONSUMO = cfg.DATA_DIR / "consumo.jsonl"
 
@@ -39,7 +40,8 @@ def listar_skills() -> list[dict]:
             "nombre": nombre,
             "descripcion": fm.get("description", ""),
             "automatica": fm.get("disable-model-invocation", "").lower() != "true",
-            "origen": "BAKI" if nombre in SKILLS_PROPIAS else ORIGEN.get(nombre, "Addy Osmani"),
+            "origen": "BAKI" if nombre in SKILLS_PROPIAS else ORIGEN.get(nombre) or next(
+                (o for p, o in ORIGEN_PREFIJOS.items() if nombre.startswith(p)), "Addy Osmani"),
         })
     return salida
 

@@ -465,3 +465,25 @@ def test_renombrar_valida_entrada(monkeypatch):
     r = c.post(f"/conversaciones/{uid}/renombrar", json={"titulo": "  Clínica   Sonrisa  " + "x" * 200}, headers=h)
     assert r.status_code == 200
     assert llamadas[0][0] == uid and llamadas[0][1].startswith("Clínica Sonrisa") and len(llamadas[0][1]) == 90
+
+
+# ------------------------------------------------------------- skills founder y subagentes del programador
+
+def test_programador_subagentes_con_limite(tmp_path):
+    carpeta = tmp_path / "negocio"
+    carpeta.mkdir()
+    assert prog.evaluar_programador("Agent", {"prompt": "x"}, carpeta, 3) == "allow"
+    assert prog.evaluar_programador("Agent", {"prompt": "x"}, carpeta, 0) == "deny"
+    assert prog.evaluar_programador("Task", {"prompt": "x"}, carpeta, 0) == "deny"
+    # Los subagentes siguen sin poder escribir fuera de la carpeta.
+    assert prog.evaluar_programador("Write", {"file_path": str(tmp_path / "fuera.md")}, carpeta, 5) == "deny"
+
+
+def test_skills_founder_instaladas_y_con_origen():
+    from app.agente.panel import listar_skills
+
+    skills = {s["nombre"]: s for s in listar_skills()}
+    founder = [n for n in skills if n.startswith("founder-")]
+    assert len(founder) == 11
+    assert all(skills[n]["origen"] == "Jake Schincariol" and skills[n]["automatica"] for n in founder)
+    assert len(skills) == 24
